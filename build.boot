@@ -2,9 +2,11 @@
 
 (set-env! :dependencies
           '[[boot/core "2.0.0-rc8"]
-            [org.clojure/clojure "1.7.0"]]
-          :source-paths #{"src/"})
+            [org.clojure/clojure "1.7.0"]
+            [adzerk/boot-test  "1.1.1" :scope "test"]]
+          :source-paths #{"src/" "test/"})
 
+(require '[adzerk.boot-test :refer :all])
 (require '[space-probe.core])
 
 (deftask do-thing
