@@ -35,6 +35,24 @@
       (fn [rand-num] (get position-type-distribution rand-num))
       rand-nums)))
 
+(defn next-to-gravity-sink-in-isolation
+  [idx row]
+  (or (= (row (- idx 1)) "G") (= (row (+ row 1)) "G")))
+
+(defn generate-accessibility-row-in-isolation
+  "Generates a row of dots, Xs, and Gs to represent accessibility"
+  [row]
+  (map-indexed
+    (fn [idx position]
+      (if (= position "G")
+        "G"
+        (if (= position "A")
+          "X"
+          (if (next-to-gravity-sink-in-isolation idx row)
+            "X"
+            "."))))
+    row))
+
 (defn generate-map
   "Generates a map of size NxN"
   [N]
