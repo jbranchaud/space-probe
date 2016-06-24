@@ -2,8 +2,9 @@
   (:use clojure.test)
   (:require [space-probe.core :as sp]))
 
-(deftest test-add-things
-  (is (= 2 (sp/add-things 1 1))))
-
-(deftest add-1-to-1
-  (is (= 2 (+ 1 1))))
+(deftest test-map-skeleton
+  (testing "size of 0"
+    (is (sp/map-skeleton 0) [[]]))
+  (testing "small map"
+    (is (sp/map-skeleton 2) [["." "."]
+                             ["." "."]])))

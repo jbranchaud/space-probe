@@ -14,10 +14,6 @@
           (vec (repeat p c)))
         position-types))))
 
-(defn add-things
-  [a b]
-  (+ a b))
-
 (defn map-skeleton
   [N]
   (vec (repeat N
