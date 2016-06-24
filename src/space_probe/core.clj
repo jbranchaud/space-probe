@@ -37,21 +37,59 @@
 
 (defn next-to-gravity-sink-in-isolation
   [idx row]
-  (or (= (row (- idx 1)) "G") (= (row (+ row 1)) "G")))
+  (or (= (get row (- idx 1)) "G")
+      (= (get row (+ idx 1)) "G")))
+
+(defn mark-gravity-sinks
+  "mark each occurrence of G as X"
+  [row]
+  (map
+    #(if (= % "G")
+       "X" %)
+    row))
 
 (defn generate-accessibility-row-in-isolation
   "Generates a row of dots, Xs, and Gs to represent accessibility"
   [row]
-  (map-indexed
-    (fn [idx position]
-      (if (= position "G")
-        "G"
-        (if (= position "A")
-          "X"
-          (if (next-to-gravity-sink-in-isolation idx row)
+  (mark-gravity-sinks
+    (map-indexed
+      (fn [idx position]
+        (if (= position "G")
+          "G"
+          (if (= position "A")
             "X"
-            "."))))
-    row))
+            (if (next-to-gravity-sink-in-isolation idx row)
+              "X"
+              "."))))
+      row)))
+
+(defn gravity-sink-in-adjacent-row
+  [idx row]
+  (or (= (get row (- idx 1)) "G")
+      (= (get row idx) "G")
+      (= (get row (+ idx 1)) "G")))
+
+(defn next-to-gravity-sink
+  [idx above-row row below-row]
+  (or
+    (next-to-gravity-sink-in-isolation idx row)
+    (gravity-sink-in-adjacent-row idx above-row)
+    (gravity-sink-in-adjacent-row idx below-row)))
+
+(defn generate-accessibility-row
+  "Generates an accessibility row of dots, Xs, and Gs in context of above/below rows"
+  [above-row row below-row]
+  (mark-gravity-sinks
+    (map-indexed
+      (fn [idx position]
+        (if (= position "G")
+          "G"
+          (if (= position "A")
+            "X"
+            (if (next-to-gravity-sink idx above-row row below-row)
+              "X"
+              "."))))
+      row)))
 
 (defn generate-map
   "Generates a map of size NxN"
@@ -72,27 +110,26 @@
                                   indexes))
               {a-row a-adjacent b-row b-adjacent c-row c-adjacent})))))
 
-(defn generate-accessability-row
-  "Generates a row of Xs and dots representing accessible spaces"
-  [a-row b-row c-row match-char]
-  (map-indexed
-    (fn [idx _] (if (adjacent-cell-match
-                         idx
-                         a-row
-                         b-row
-                         c-row
-                         match-char)
-                     "X" "."))
-    b-row))
+; (defn generate-accessability-row
+;   "Generates a row of Xs and dots representing accessible spaces"
+;   [a-row b-row c-row match-char]
+;   (map-indexed
+;     (fn [idx _] (if (adjacent-cell-match
+;                          idx
+;                          a-row
+;                          b-row
+;                          c-row
+;                          match-char)
+;                      "X" "."))
+;     b-row))
 
 (defn generate-accessability-map
   "Generates a map of Xs and dots representing accessible spaces"
   [space-map]
   (map-indexed
     (fn [row-num row]
-      (generate-accessability-row
+      (generate-accessibility-row
         (get space-map (- row-num 1))
         row
-        (get space-map (+ row-num 1))
-        "G"))
+        (get space-map (+ row-num 1))))
     space-map))
