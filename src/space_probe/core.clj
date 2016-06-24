@@ -54,13 +54,6 @@
                                   indexes))
               {a-row a-adjacent b-row b-adjacent c-row c-adjacent})))))
 
-(def some-map
-  [["." "." "G" "." "."]
-   ["." "." "." "." "."]
-   ["." "." "." "." "."]])
-
-(adjacent-cell-match 2 (some-map 0) (some-map 1) (some-map 2) "G")
-
 (defn generate-accessability-row
   "Generates a row of Xs and dots representing accessible spaces"
   [a-row b-row c-row match-char]
@@ -85,5 +78,3 @@
         (get space-map (+ row-num 1))
         "G"))
     space-map))
-
-; (map-indexed (fn [idx space] (if (or (= space "G") (= space "A")) "X" (if (or (= (get r1 (- idx 1)) "G") (= (get r1 (+ idx 1)) "G")) "X" "."))) r1)
