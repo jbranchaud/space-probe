@@ -97,32 +97,6 @@
   (vec 
     (take N (repeatedly #(vec-of-position-types N)))))
 
-(defn adjacent-cell-match
-  [index a-row b-row c-row match-char]
-  (let [a-adjacent [(- index 1) index (+ index 1)]
-        b-adjacent [(- index 1) (+ index 1)]
-        c-adjacent [(- index 1) index (+ index 1)]]
-    (some true?
-          (flatten
-            (map
-              (fn [[row indexes]] (map
-                                  (fn [index] (= match-char (get row index)))
-                                  indexes))
-              {a-row a-adjacent b-row b-adjacent c-row c-adjacent})))))
-
-; (defn generate-accessability-row
-;   "Generates a row of Xs and dots representing accessible spaces"
-;   [a-row b-row c-row match-char]
-;   (map-indexed
-;     (fn [idx _] (if (adjacent-cell-match
-;                          idx
-;                          a-row
-;                          b-row
-;                          c-row
-;                          match-char)
-;                      "X" "."))
-;     b-row))
-
 (defn generate-accessability-map
   "Generates a map of Xs and dots representing accessible spaces"
   [space-map]
